@@ -14,11 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt4 import Qt, QtCore
+from PyQt5 import Qt, QtCore
 import numpy as np
 
-import translation as tr
-import utils
+from . import translation as tr
+from . import utils
 
 # NOTE: The naming scheme for markers an lines is compatible
 #        with matplotlib because of a possible future impementation

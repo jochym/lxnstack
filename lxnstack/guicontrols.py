@@ -16,20 +16,23 @@
 
 import math
 import os
-import paths
+from . import paths
 import logging
 
-from PyQt4 import Qt, QtCore, QtGui, uic
+from PyQt5 import Qt, QtCore, QtGui, uic
+from PyQt5.QtWidgets import QLineEdit, QStyledItemDelegate, QComboBox
+from PyQt5.QtWidgets import QDialog, QDialogButtonBox, QWidget, QProgressBar
+from PyQt5.QtWidgets import QApplication, QVBoxLayout, QTableWidget, QTableWidgetItem
 
-import translation as tr
-import plotting
-import utils
-import styles
-import lightcurves as lcurves
-import colormaps as cmaps
-import mappedimage
+from . import translation as tr
+from . import plotting
+from . import utils
+from . import styles
+from . import lightcurves as lcurves
+from . import colormaps as cmaps
+from . import mappedimage
 import numpy as np
-import log
+from . import log
 
 IMAGEVIEWER = "imageviewer"
 DIFFERENCEVIEWER = "diffviewer"
@@ -238,7 +241,7 @@ class SplashScreen(Qt.QObject):
         self._qss = Qt.QSplashScreen(self._pxm,
                                      QtCore.Qt.WindowStaysOnTopHint |
                                      QtCore.Qt.X11BypassWindowManagerHint)
-        self._progress = QtGui.QProgressBar(self._qss)
+        self._progress = QProgressBar(self._qss)
 
         h = self._pxm.height()
         w = self._pxm.width()
@@ -302,15 +305,15 @@ class SplashScreen(Qt.QObject):
         self._qss.finish(qwid)
 
     def processEvents(self):
-        qapp = QtGui.QApplication.instance()
+        qapp = QApplication.instance()
         if qapp is not None:
             qapp.processEvents()
 
 
-class TaggedLineEdit(QtGui.QLineEdit):
+class TaggedLineEdit(QLineEdit):
 
     def __init__(self):
-        QtGui.QLineEdit.__init__(self)
+        QLineEdit.__init__(self)
         self.textcolor = QtGui.QColor(67, 172, 232)
         self.boxcolor = QtGui.QColor(175, 210, 255)
         self.setReadOnly(True)
@@ -356,7 +359,7 @@ class TaggedLineEdit(QtGui.QLineEdit):
             xoff += w+3*spacing
 
 
-class CCBStyledItemDelegate (QtGui.QStyledItemDelegate):
+class CCBStyledItemDelegate (QStyledItemDelegate):
 
     def paint(self, painter, options, index):
         newopts = QtGui.QStyleOptionViewItem(options)
@@ -369,13 +372,13 @@ class CCBStyledItemDelegate (QtGui.QStyledItemDelegate):
         QtGui.QStyledItemDelegate.paint(self, painter, newopts, index)
 
 
-class ComboCheckBox(QtGui.QComboBox):
+class ComboCheckBox(QComboBox):
 
     itemChanged = QtCore.pyqtSignal(QtGui.QStandardItem)
     checkStateChanged = QtCore.pyqtSignal()
 
     def __init__(self, *arg, **args):
-        QtGui.QComboBox.__init__(self, *arg, **args)
+        QComboBox.__init__(self, *arg, **args)
         model = QtGui.QStandardItemModel(0, 1)
         self.setModel(model)
         self.setItemDelegate(CCBStyledItemDelegate(self))
@@ -446,7 +449,7 @@ class ComboCheckBox(QtGui.QComboBox):
 
 class ToolComboBox(Qt.QFrame):
 
-    _selector = QtGui.QComboBox
+    _selector = QComboBox
 
     def __init__(self, title="", tooltip="", useframe=True):
 
@@ -505,20 +508,20 @@ class MagDoubleValidator(QtGui.QDoubleValidator):
         return (state, pos)
 
 
-class MagItemDelegate(QtGui.QStyledItemDelegate):
+class MagItemDelegate(QStyledItemDelegate):
 
     def createEditor(self, parent, option, index):
-        lineEdit = QtGui.QLineEdit(parent)
+        lineEdit = QLineEdit(parent)
         validator = MagDoubleValidator(-99, 99, 4, lineEdit)
         validator.setNotation(0)
         lineEdit.setValidator(validator)
         return lineEdit
 
 
-class BandItemDelegate(QtGui.QStyledItemDelegate):
+class BandItemDelegate(QStyledItemDelegate):
 
     def createEditor(self, parent, option, index):
-        comboBox = QtGui.QComboBox(parent)
+        comboBox = QComboBox(parent)
         comboBox.setEditable(False)
         for band in lcurves.COMPONENTS_NAME:
             comboBox.addItem(band)
@@ -531,17 +534,17 @@ class BandItemDelegate(QtGui.QStyledItemDelegate):
         editor.setCurrentIndex(index)
 
 
-class DialogBox(QtGui.QDialog):
+class DialogBox(QDialog):
 
-    def __init__(self, title="Dialog", buttons=QtGui.QDialogButtonBox.Ok):
-        QtGui.QDialog.__init__(self)
+    def __init__(self, title="Dialog", buttons=QDialogButtonBox.Ok):
+        QDialog.__init__(self)
 
-        bbox = QtGui.QDialogButtonBox(self)
+        bbox = QDialogButtonBox(self)
         bbox.addButton(buttons)
         bbox.accepted.connect(self.accept)
 
-        mainlayout = QtGui.QVBoxLayout()
-        self.central_layout = QtGui.QVBoxLayout()
+        mainlayout = QVBoxLayout()
+        self.central_layout = QVBoxLayout()
 
         mainlayout.addLayout(self.central_layout)
         mainlayout.addWidget(bbox)
@@ -555,7 +558,7 @@ class ComponentMappingDialog(DialogBox):
 
     def __init__(self):
         DialogBox.__init__(self, tr.tr("Channel mapping dialog"))
-        self._table = QtGui.QTableWidget(0, 2)
+        self._table = QTableWidget(0, 2)
         self._table.setItemDelegateForColumn(1, BandItemDelegate())
 
         self.addWidget(self._table)
@@ -574,8 +577,8 @@ class ComponentMappingDialog(DialogBox):
         for com in channel_mapping:
             channel_name = tr.tr("channel {0:03d}").format(com)
             band_name = str(channel_mapping[com])
-            key_item = QtGui.QTableWidgetItem(channel_name)
-            val_item = QtGui.QTableWidgetItem(band_name)
+            key_item = QTableWidgetItem(channel_name)
+            val_item = QTableWidgetItem(band_name)
 
             key_item.setFlags(
                 QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
@@ -605,7 +608,7 @@ class PhotometricPropertiesDialog(DialogBox):
 
     def __init__(self):
         DialogBox.__init__(self, tr.tr("Unknown star"))
-        self._table = QtGui.QTableWidget(0, 2)
+        self._table = QTableWidget(0, 2)
         self._table.setItemDelegateForColumn(1, MagItemDelegate())
 
         self.addWidget(self._table)
@@ -660,11 +663,11 @@ class PhotometricPropertiesDialog(DialogBox):
         return self.exec_(star, channel_mapping)
 
 
-class ExifViewer(QtGui.QDialog):
+class ExifViewer(QDialog):
 
     def __init__(self, title=""):
 
-        QtGui.QDialog.__init__(self)
+        QDialog.__init__(self)
 
         self.setWindowTitle(title)
         self._table = QtGui.QTableWidget(0, 2)
@@ -698,13 +701,13 @@ class ExifViewer(QtGui.QDialog):
         self._table.setSortingEnabled(True)
 
 
-class ImageViewer(QtGui.QWidget):
+class ImageViewer(QWidget):
 
     # titleChanged = QtCore.pyqtSignal(str)
 
     def __init__(self, infolabel=None):
 
-        QtGui.QWidget.__init__(self)
+        QWidget.__init__(self)
 
         self.zoom = 1
         self.min_zoom = 0
@@ -1538,10 +1541,10 @@ class DifferenceViewer(ImageViewer):
         del painter
 
 
-class DropDownWidget(QtGui.QWidget):
+class DropDownWidget(QWidget):
 
     def __init__(self, parent=None):
-        QtGui.QWidget.__init__(self, parent)
+        QWidget.__init__(self, parent)
 
     def paintEvent(self, event):
         opt = QtGui.QStyleOption()
@@ -1553,11 +1556,11 @@ class DropDownWidget(QtGui.QWidget):
                                    self)
 
 
-class PlotSubWidget(QtGui.QWidget):
+class PlotSubWidget(QWidget):
 
     def __init__(self, parent=None):
         assert isinstance(parent, PlotWidget), "parent is not a PlotWidget"
-        QtGui.QWidget.__init__(self, parent)
+        QWidget.__init__(self, parent)
         gboxlayout = Qt.QGridLayout()
         titlelayout = Qt.QHBoxLayout()
 
@@ -1953,10 +1956,10 @@ class PlotPropertyDialogWidget(PlotSubWidget):
             return self.parent().plots[self._selected_plot_idx]
 
 
-class PlotWidget(QtGui.QWidget):
+class PlotWidget(QWidget):
 
     def __init__(self, parent=None):
-        QtGui.QWidget.__init__(self, parent)
+        QWidget.__init__(self, parent)
 
         self.plots = []
         self._backend = None
@@ -2119,10 +2122,10 @@ class PlotWidget(QtGui.QWidget):
                     count += 1
 
 
-class PlotViewer(QtGui.QWidget):
+class PlotViewer(QWidget):
 
     def __init__(self, parent=None, inverted_y=False):
-        QtGui.QWidget.__init__(self, parent)
+        QWidget.__init__(self, parent)
 
         self._pv = PlotWidget(parent=self)
 

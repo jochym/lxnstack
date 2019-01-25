@@ -30,7 +30,7 @@
      http://www.cybercom.net/~dcoffin/dcraw/
 """
 
-from PyQt4 import Qt, QtCore
+from PyQt5 import Qt, QtCore
 import numpy as np
 import struct
 import sys

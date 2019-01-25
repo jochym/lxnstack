@@ -22,13 +22,13 @@
 
 from itertools import combinations
 
-import plotting
+from . import plotting
 import numpy as np
 import scipy.optimize as opt
 # import astropy.stats as stats
 import scipy.stats as stats
 # from astropy.modeling import models, fitting
-import utils
+from . import utils
 
 
 PHOTOMETRIC_BANDS = {

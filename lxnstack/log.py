@@ -19,7 +19,7 @@ import logging
 import logging.handlers
 import inspect
 
-import paths
+from . import paths
 
 LOGGERNAME = "lxnstack-root-logger"
 LOG_FILE = os.path.join(paths.HOME_PATH, 'lxnstack.log')

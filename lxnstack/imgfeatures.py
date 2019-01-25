@@ -14,8 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import utils
-from PyQt4 import Qt, QtCore, QtGui
+from . import utils
+from PyQt5 import Qt, QtCore, QtGui
 
 
 # parent object for all features

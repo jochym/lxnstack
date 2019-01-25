@@ -15,17 +15,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import paths
+from . import paths
 import logging
 
 import numpy as np
-from PyQt4 import Qt, QtCore, QtGui, uic
+from PyQt5 import Qt, QtCore, QtGui, uic
 
-import translation as tr
-import log
-import utils
-import colormaps
-import lightcurves as lcurves
+from . import translation as tr
+from . import log
+from . import utils
+from . import colormaps
+from . import lightcurves as lcurves
 
 
 class MappedImage(QtCore.QObject):

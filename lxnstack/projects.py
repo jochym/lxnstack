@@ -20,10 +20,10 @@ from xml.dom import minidom
 
 import numpy as np
 
-import log
-import utils
-import imgfeatures
-import lightcurves as lcurves
+from . import log
+from . import utils
+from . import imgfeatures
+from . import lightcurves as lcurves
 
 
 def getProjectAbsURL(project_dir, url):

@@ -16,18 +16,18 @@
 
 import sys
 import os
-import paths
+from . import paths
 import time
 import math
 import tempfile
-import cPickle
+import _pickle as cPickle
 import logging
 import calendar
 
-from PyQt4 import Qt, QtCore, QtGui, uic
+from PyQt5 import Qt, QtCore, QtGui, uic
 
-import log
-import translation as tr
+from . import log
+from . import translation as tr
 
 PROGRAM = paths.PROGRAM_NAME
 PROGRAM_NAME = paths.PROGRAM_NAME
@@ -245,7 +245,7 @@ if FITS_SUPPORT:
             return head
 
 try:
-    import cr2plugin
+    from . import cr2plugin
     CR2_SUPPORT = True
     log.log("<lxnstack.utils module>",
             "CR2 support enabled",

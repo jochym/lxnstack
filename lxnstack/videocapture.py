@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import paths
+from . import paths
 import time
 import subprocess
 import errno
@@ -26,12 +26,13 @@ from fcntl import ioctl
 
 import cv2
 import numpy as np
-from PyQt4 import Qt, QtCore, QtGui, uic
+from PyQt5 import Qt, QtCore, QtGui, uic
+from PyQt5.QtWidgets import QLabel
 
-import translation as tr
-import utils
-import videodev2 as v4l2
-import log
+from . import translation as tr
+from . import utils
+from . import videodev2 as v4l2
+from . import log
 import logging
 
 
@@ -484,7 +485,7 @@ class V4l2VideoDevice(GenericVideoDevice):
 
     def isOpened(self):
         """Returns True if the the device is opened"""
-        return self._fd >= 0
+        return self._fd is not None and self._fd >= 0
 
     def isStreaming(self):
         """Returns True if the the device is capturing images"""
@@ -3067,7 +3068,7 @@ class CaptureScheduler(Qt.QObject):
                             Qt.QPointF(xoff-2.5, y0))
 
         del _date
-        return QtGui.QLabel.paintEvent(self.jobTimeView, obj)
+        return QLabel.paintEvent(self.jobTimeView, obj)
 
     def setCaptureDevice(self, device):
         self._capture_device = device

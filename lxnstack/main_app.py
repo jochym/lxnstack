@@ -22,22 +22,23 @@ import shutil
 import webbrowser
 import logging
 
-from PyQt4 import uic, Qt, QtCore, QtGui
+from PyQt5 import uic, Qt, QtCore, QtGui
+from PyQt5.QtWidgets import QAction, QActionGroup, QToolButton, QMdiArea, QMainWindow
 import numpy as np
 import scipy as sp
 import cv2
 
-import paths
-import log
-import utils
-import styles
-import projects
-import videocapture
-import imgfeatures
-import guicontrols
-import colormaps as cmaps
-import translation as tr
-import lightcurves as lcurves
+from . import paths
+from . import log
+from . import utils
+from . import styles
+from . import projects
+from . import videocapture
+from . import imgfeatures
+from . import guicontrols
+from . import colormaps as cmaps
+from . import translation as tr
+from . import lightcurves as lcurves
 
 
 def Int(val):
@@ -224,7 +225,7 @@ class theApp(Qt.QObject):
 
         self.wnd.alignGroupBox.setEnabled(False)
         self.mdi.setTabsClosable(True)
-        self.mdi.setViewMode(QtGui.QMdiArea.TabbedView)
+        self.mdi.setViewMode(QMdiArea.TabbedView)
         self.wnd.manualAlignGroupBox.setEnabled(False)
         self.wnd.masterBiasGroupBox.setEnabled(False)
         self.wnd.masterDarkGroupBox.setEnabled(False)
@@ -772,7 +773,7 @@ class theApp(Qt.QObject):
                 level=logging.DEBUG)
         self.devices = tuple(videocapture.listVideoDevices())
         self.dlg._dialog.devComboBox.clear()
-        action_group = QtGui.QActionGroup(self.capture_devices_menu)
+        action_group = QActionGroup(self.capture_devices_menu)
         self.capture_devices_menu._video_action_group = action_group
         self.capture_devices_menu.clear()
 
@@ -1312,11 +1313,11 @@ class theApp(Qt.QObject):
                 self.saveSettings()
                 if os.path.exists(paths.TEMP_PATH):
                     shutil.rmtree(paths.TEMP_PATH)
-                return QtGui.QMainWindow.closeEvent(self.wnd, event)
+                return QMainWindow.closeEvent(self.wnd, event)
             elif val == Qt.QMessageBox.No:
                 event.ignore()
             else:
-                return QtGui.QMainWindow.closeEvent(self.wnd, event)
+                return QMainWindow.closeEvent(self.wnd, event)
         else:
             event.ignore()
 
@@ -1815,135 +1816,135 @@ class theApp(Qt.QObject):
                 "Setting up menus...",
                 level=logging.DEBUG)
 
-        self.action_exit = QtGui.QAction(
+        self.action_exit = QAction(
             utils.getQIcon("application-exit"),
             tr.tr('exit'), self)
         self.action_exit.triggered.connect(
             self.wnd.close)
 
-        self.action_load_project = QtGui.QAction(
+        self.action_load_project = QAction(
             utils.getQIcon("document-open"),
             tr.tr('Load project'), self)
         self.action_load_project.triggered.connect(
             self.doLoadProject)
 
-        self.action_new_project = QtGui.QAction(
+        self.action_new_project = QAction(
             utils.getQIcon("document-new"),
             tr.tr('New project'), self)
         self.action_new_project.triggered.connect(
             self.doNewProject)
 
-        self.action_save_project = QtGui.QAction(
+        self.action_save_project = QAction(
             utils.getQIcon("document-save"),
             tr.tr('Save project'), self)
         self.action_save_project.triggered.connect(
             self.doSaveProject)
 
-        self.action_save_project_as = QtGui.QAction(
+        self.action_save_project_as = QAction(
             utils.getQIcon("document-save-as"),
             tr.tr('Save project as'), self)
         self.action_save_project_as.triggered.connect(
             self.doSaveProjectAs)
 
-        self.action_add_files = QtGui.QAction(
+        self.action_add_files = QAction(
             utils.getQIcon("insert-image"),
             tr.tr('Add images/videos'), self)
         self.action_add_files.triggered.connect(
             self.doLoadFiles)
 
-        self.action_lock_toolbars = QtGui.QAction(
+        self.action_lock_toolbars = QAction(
             utils.getQIcon(None),
             tr.tr('Lock tool-bars'), self)
         self.action_lock_toolbars.toggled.connect(
             self.setToolBarsLock)
         self.action_lock_toolbars.setCheckable(True)
 
-        self.action_show_preferences = QtGui.QAction(
+        self.action_show_preferences = QAction(
             utils.getQIcon(),
             tr.tr('Show preferences'), self)
         self.action_show_preferences.triggered.connect(
             self.doSetPreferences)
 
-        self.action_show_about = QtGui.QAction(
+        self.action_show_about = QAction(
             utils.getQIcon("help-about"),
             tr.tr('About lxnstack'), self)
         self.action_show_about.triggered.connect(
             self.doShowAbout)
 
-        self.action_show_manual = QtGui.QAction(
+        self.action_show_manual = QAction(
             utils.getQIcon("help-contents"),
             tr.tr('Show User\'s Manual'), self)
         self.action_show_manual.triggered.connect(
             self.doShowUserMan)
 
-        self.action_align = QtGui.QAction(
+        self.action_align = QAction(
             utils.getQIcon("align-images"),
             tr.tr('Align images'), self)
         self.action_align.triggered.connect(
             self.doAlign)
 
-        self.action_stack = QtGui.QAction(
+        self.action_stack = QAction(
             utils.getQIcon("stack-images"),
             tr.tr('Stack images'), self)
         self.action_stack.triggered.connect(
             self.doStack)
 
-        self.action_save_video = QtGui.QAction(
+        self.action_save_video = QAction(
             utils.getQIcon("video-x-generic"),
             tr.tr('Export images sequence as a video'), self)
         self.action_save_video.triggered.connect(
             self.doSaveVideo)
 
-        self.action_export_cal = QtGui.QAction(
+        self.action_export_cal = QAction(
             utils.getQIcon("export-calibrated"),
             tr.tr('Export calibrated images'), self)
         self.action_export_cal.triggered.connect(
             self.doExportCalibrated)
 
-        self.action_gen_lightcurves = QtGui.QAction(
+        self.action_gen_lightcurves = QAction(
             utils.getQIcon("generate-lightcurves"),
             tr.tr('Generate lightcurves'), self)
         self.action_gen_lightcurves.triggered.connect(
             self.doGenerateLightCurves)
 
-        self.action_gen_transftable = QtGui.QAction(
+        self.action_gen_transftable = QAction(
             utils.getQIcon("generate-transf-table"),
             tr.tr('Generate color transformation coefficients'), self)
         self.action_gen_transftable.triggered.connect(
             self.doGenerateTransfTable)
 
-        self.action_load_transftable = QtGui.QAction(
+        self.action_load_transftable = QAction(
             utils.getQIcon("load-transf-table"),
             tr.tr('Load color transformation coefficients'), self)
         self.action_load_transftable.triggered.connect(
             self.doLoadTransfTable)
 
-        self.action_save_transftable = QtGui.QAction(
+        self.action_save_transftable = QAction(
             utils.getQIcon("save-transf-table"),
             tr.tr('Save color transformation coefficients'), self)
         self.action_save_transftable.triggered.connect(
             self.doSaveTransfTable)
 
-        self.action_edit_transftable = QtGui.QAction(
+        self.action_edit_transftable = QAction(
             utils.getQIcon("save-transf-table"),
             tr.tr('Edit color transformation coefficients'), self)
         self.action_edit_transftable.triggered.connect(
             self.doEditTransfTable)
 
-        self.action_enable_rawmode = QtGui.QAction(
+        self.action_enable_rawmode = QAction(
             utils.getQIcon("bayer-mode"),
             tr.tr('Enable raw-mode'), self)
         self.action_enable_rawmode.triggered.connect(
             self.updateBayerMatrix)
         self.action_enable_rawmode.setCheckable(True)
 
-        self.action_edit_channel_mapping = QtGui.QAction(
+        self.action_edit_channel_mapping = QAction(
             utils.getQIcon("channel-mapping"),
             tr.tr('Edit photometric bands mapping'), self)
         self.action_edit_channel_mapping.triggered.connect(
             self.updateChannelMapping)
 
-        self.action_enable_video = QtGui.QAction(
+        self.action_enable_video = QAction(
             utils.getQIcon(""),
             tr.tr('Enable preview'), self)
         self.action_enable_video.setCheckable(True)
@@ -1951,27 +1952,27 @@ class theApp(Qt.QObject):
             self.enableVideoPreview)
         self.action_enable_video.setEnabled(False)
 
-        self.action_start_capture = QtGui.QAction(
+        self.action_start_capture = QAction(
             utils.getQIcon("video-recording-start"),
             tr.tr('Start capturing'), self)
         self.action_start_capture.triggered.connect(
             self.startDirectVideoCapture)
         self.action_start_capture.setEnabled(False)
 
-        self.action_stop_capture = QtGui.QAction(
+        self.action_stop_capture = QAction(
             utils.getQIcon("video-recording-stop"),
             tr.tr('Stop capturing'), self)
         self.action_stop_capture.triggered.connect(
             self.stopDirectVideoCapture)
         self.action_stop_capture.setEnabled(False)
 
-        self.action_sched_capture = QtGui.QAction(
+        self.action_sched_capture = QAction(
             utils.getQIcon("video.scheduler"),
             tr.tr('open scheduler'), self)
         self.action_sched_capture.triggered.connect(
             self.videoCaptureScheduler.show)
 
-        self.action_take_shot = QtGui.QAction(
+        self.action_take_shot = QAction(
             utils.getQIcon("video-single-shot"),
             tr.tr('Take single shot'), self)
         self.action_take_shot.triggered.connect(
@@ -2097,10 +2098,10 @@ class theApp(Qt.QObject):
 
         toolbar.setObjectName("VideoCapture ToolBar")
 
-        devices_button = QtGui.QToolButton()
+        devices_button = QToolButton()
         devices_button.setMenu(self.capture_devices_menu)
         devices_button.setIcon(utils.getQIcon("camera"))
-        devices_button.setPopupMode(QtGui.QToolButton.InstantPopup)
+        devices_button.setPopupMode(QToolButton.InstantPopup)
 
         toolbar.addWidget(devices_button)
         toolbar.addAction(self.action_enable_video)

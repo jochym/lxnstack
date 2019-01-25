@@ -17,10 +17,10 @@
 import os
 import logging
 
-from PyQt4 import QtCore
+from PyQt5 import QtCore
 
-import paths
-import log
+from . import paths
+from . import log
 
 
 def tr(s):

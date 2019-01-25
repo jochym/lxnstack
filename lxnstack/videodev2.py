@@ -19,8 +19,8 @@ import platform
 import ctypes
 import ctypes.util
 
-import log
-from v4l2_controls import *
+from . import log
+from .v4l2_controls import *
 
 #
 # NOTE: This header is generated from <linux/videodev2.h> using the

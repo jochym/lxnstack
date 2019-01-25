@@ -18,12 +18,13 @@ import os
 import re
 import logging
 
-from PyQt4 import QtGui
+from PyQt5 import QtGui
+from PyQt5.QtWidgets import QStyleFactory, QApplication
 
-import log
-import paths
-import utils
-import translation as tr
+from . import log
+from . import paths
+from . import utils
+from . import translation as tr
 
 DEFAULT = os.path.join(paths.STYLES_PATH, 'default.css')
 
@@ -52,7 +53,7 @@ def readStyleSheet(filename):
 
 def enumarateStyles():
     style_list = []
-    for x in QtGui.QStyleFactory.keys():
+    for x in QStyleFactory.keys():
         style_list.append(str(x).lower())
     return set(style_list)
 
@@ -104,6 +105,6 @@ def setApplicationStyle(style):
 
 def setApplicationStyleSheet(filename):
     if filename is not None:
-        QtGui.QApplication.instance().setStyleSheet(readStyleSheet(filename))
+        QApplication.instance().setStyleSheet(readStyleSheet(filename))
     else:
-        QtGui.QApplication.instance().setStyleSheet('')
+        QApplication.instance().setStyleSheet('')
